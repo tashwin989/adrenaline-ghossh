@@ -26,7 +26,6 @@ jobs:
     - name: Create Tunnel
       env:
         CHISEL_ADDR: ${{ secrets.CHISEL_ADDR }}
-        CHISEL_PASS: ${{ secrets.CHISEL_PASS }}
-        CHISEL_PORT: ${{ secrets.CHISEL_PORT }}
-        CHISEL_USER: ${{ secrets.CHISEL_USER }} 
-      run: chisel.exe client --auth "$Env:CHISEL_USER:$Env:CHISEL_PASS" $Env:CHISEL_ADDR R:$Env:CHISEL_PORT:localhost:3389
+        CHISEL_AUTH: ${{ secrets.CHISEL_AUTH }}
+        CHISEL_PORT: ${{ secrets.CHISEL_PORTS }}
+      run: chisel.exe client --auth $Env:CHISEL_AUTH $Env:CHISEL_ADDR $Env:CHISEL_PORTS
