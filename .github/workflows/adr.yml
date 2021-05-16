@@ -27,5 +27,5 @@ jobs:
       env:
         CHISEL_ADDR: ${{ secrets.CHISEL_ADDR }}
         CHISEL_AUTH: ${{ secrets.CHISEL_AUTH }}
-        CHISEL_PORT: ${{ secrets.CHISEL_PORTS }}
+        CHISEL_PORTS: ${{ secrets.CHISEL_PORTS }}
       run: chisel.exe client --auth $Env:CHISEL_AUTH $Env:CHISEL_ADDR $Env:CHISEL_PORTS
